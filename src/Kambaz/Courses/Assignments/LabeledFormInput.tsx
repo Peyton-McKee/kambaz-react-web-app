@@ -13,7 +13,7 @@ export default function LabeledFormInput({
 }: LabeledFormInputProps) {
   return (
     <tr>
-      <td align="right" valign="top">
+      <td align="right" valign="top" className="p-3">
         <label htmlFor={id}>{label}</label>
       </td>
       <td>{inputComponent}</td>

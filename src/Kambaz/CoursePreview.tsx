@@ -1,3 +1,4 @@
+import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router";
 
 export interface CoursePreviewProps {
@@ -14,18 +15,20 @@ export default function CoursePreview({
   description,
 }: CoursePreviewProps) {
   return (
-    <div className="wd-dashboard-course">
+    <Card>
       <Link
         to={`/Kambaz/Courses/${courseId}/Home`}
-        className="wd-dashboard-course-link"
+        className="wd-dashboard-course-link text-decoration-none text-dark"
       >
-        <img src={imgSrc} width={200} />
-        <div>
-          <h5>{title}</h5>
-          <p className="wd-dashboard-course-title">{description}</p>
-          <button>Go</button>
-        </div>
+        <Card.Img variant="top" src={imgSrc} width="100%" height={160} />
+        <Card.Body>
+          <Card.Title className="wd-dashboard-course-title">{title}</Card.Title>
+          <Card.Text className="wd-dashboard-course-description">
+            {description}
+          </Card.Text>
+          <Button variant="primary">Go</Button>
+        </Card.Body>
       </Link>
-    </div>
+    </Card>
   );
 }

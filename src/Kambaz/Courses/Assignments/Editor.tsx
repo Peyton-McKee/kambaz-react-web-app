@@ -1,3 +1,11 @@
+import {
+  Button,
+  Form,
+  FormControl,
+  FormGroup,
+  FormLabel,
+  FormSelect,
+} from "react-bootstrap";
 import LabeledFormInput, { LabeledFormInputProps } from "./LabeledFormInput";
 import SelectManyFormInput from "./SelectManyFormInput";
 
@@ -6,26 +14,34 @@ export default function AssignmentEditor() {
     {
       label: "Points",
       id: "wd-points",
-      inputComponent: <input type="number" value={100} />,
+      inputComponent: <FormControl type="number" value={100} />,
     },
     {
       label: "Assignment Group",
       id: "wd-group",
-      inputComponent: <input id="wd-group" type="select" value="ASSIGNMENTS" />,
+      inputComponent: (
+        <FormSelect id="wd-group" value="ASSIGNMENTS">
+          <option value={"ASSIGNMENTS"}>Assignments</option>
+        </FormSelect>
+      ),
     },
     {
       label: "Display Grade as",
       id: "wd-grade-display",
       inputComponent: (
-        <input id="wd-grade-display" type="select" value="Percentage" />
+        <FormSelect id="wd-grade-display" value="Percentage">
+          <option value={"Percentage"}>Percentage</option>
+        </FormSelect>
       ),
     },
     {
       label: "Submission Type",
       id: "wd-submission-type",
       inputComponent: (
-        <div>
-          <input id="wd-submission-type" type="select" value="Online" />
+        <div className="p-3 border rounded">
+          <FormSelect className="mb-3" id="wd-submission-type" value="Online">
+            <option value={"Online"}>Online</option>
+          </FormSelect>
           <SelectManyFormInput
             title="Online Entry Options"
             id="wd-online-entry"
@@ -44,55 +60,69 @@ export default function AssignmentEditor() {
       label: "Assign",
       id: "wd-assign",
       inputComponent: (
-        <div>
-          <label htmlFor="wd-assign-to">Assign to</label>
+        <div className="border rounded p-3">
+          <FormLabel className="fw-bold" htmlFor="wd-assign-to">
+            Assign to
+          </FormLabel>
           <br />
-          <input id="wd-assign-to" value={"Everyone"} />
+          <FormControl id="wd-assign-to" value={"Everyone"} />
           <br />
+          <FormLabel className="fw-bold" htmlFor="wd-assign-due">
+            Due
+          </FormLabel>
           <br />
-          <label htmlFor="wd-assign-due">Due</label>
+          <FormControl type="date" value={"05/13/2024"} />
           <br />
-          <input type="date" value={"05/13/2024"} />
-          <br />
-          <br />
-          <table>
-            <tr>
-              <td>
-                <label htmlFor="wd-assign-from">Available from</label>
-                <br />
-                <input type="date" value={"05/13/2024"} />
-              </td>
-              <td>
-                <label htmlFor="wd-assign-to">Until</label>
-                <br />
-                <input type="date" value={"05/20/2024"} />
-              </td>
-            </tr>
-          </table>
+
+          <div className="d-flex align-items-center">
+            <div>
+              <FormLabel className="fw-bold" htmlFor="wd-assign-from">
+                Available from
+              </FormLabel>
+              <br />
+              <FormControl type="date" value={"05/13/2024"} />
+            </div>
+            <div>
+              <FormLabel className="fw-bold" htmlFor="wd-assign-to">
+                Until
+              </FormLabel>
+              <br />
+              <FormControl type="date" value={"05/20/2024"} />
+            </div>
+          </div>
         </div>
       ),
     },
   ];
   return (
-    <div id="wd-assignments-editor">
-      <b>Assignment Name</b>
-      <br></br>
-      <br></br>
-      <input id="wd-name" value="A1 - ENV + HTML" />
+    <Form id="wd-assignments-editor">
+      <FormGroup>
+        <FormLabel>Assignment Name</FormLabel>
+        <FormControl id="wd-name" value={"A1 - ENV + HTML"}></FormControl>
+      </FormGroup>
       <br />
-      <br />
-      <textarea id="wd-description">
+      <FormControl as="textarea">
         The assignment is available online Submit a link to the landing page of
-      </textarea>
+      </FormControl>
       <br />
-      <table>
-        {formInputContent.map((props) => (
-          <>
-            <LabeledFormInput {...props} />
-            <br />
-          </>
-        ))}
+      <table className="w-100">
+        <tbody>
+          {formInputContent.map((props) => (
+            <>
+              <LabeledFormInput {...props} />
+              <br />
+            </>
+          ))}
+        </tbody>
       </table>
-    </div>
+      <br />
+      <hr className="border" />
+      <div className="float-end">
+        <Button className="bg-secondary me-2 border-secondary text-black">
+          Cancel
+        </Button>
+        <Button className="bg-success border-secondary">Save</Button>
+      </div>
+    </Form>
   );
 }

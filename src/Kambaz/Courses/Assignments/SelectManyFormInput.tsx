@@ -13,11 +13,13 @@ export default function SelectManyFormInput({
 }: SelectManyFormInput) {
   return (
     <div>
-      <label htmlFor={id}>{title}</label>
+      <label className="fw-bold mb-3" htmlFor={id}>
+        {title}
+      </label>
       <br />
       {options.map((option) => (
-        <div>
-          <input type="checkbox" name={option} id={option} />
+        <div className="mb-3">
+          <input type="checkbox" className="me-3" name={option} id={option} />
           <label htmlFor={option}>{displayEnum(option)}</label>
         </div>
       ))}

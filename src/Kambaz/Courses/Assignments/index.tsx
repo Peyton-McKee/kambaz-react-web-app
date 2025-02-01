@@ -1,4 +1,8 @@
+import { Container, ListGroup } from "react-bootstrap";
+import AssignmentsControls from "./AssignmentControls";
 import AssignmentPreview, { AssignmentPreviewProps } from "./AssignmentPreview";
+import { BsChevronDown, BsGripVertical } from "react-icons/bs";
+import AssignmentsControlButtons from "./AssignmentsControlButtons";
 
 export default function Assignments() {
   const courseId = "1234";
@@ -30,20 +34,22 @@ export default function Assignments() {
   ];
 
   return (
-    <div id="wd-assignments">
-      <input placeholder="Search for Assignments" id="wd-search-assignment" />
-      <button id="wd-add-assignment-group">+ Group</button>
-      <button id="wd-add-assignment">+ Assignment</button>
-      <h3 id="wd-assignments-title">
-        ASSIGNMENTS 40% of Total <button>+</button>
-      </h3>
-      <ul id="wd-assignment-list">
-        <li className="wd-assignment-list-item">
-          {assignments.map((assignment) => (
+    <Container id="wd-assignments">
+      <AssignmentsControls />
+      <br />
+      <ListGroup className="rounded-0" id="wd-assignments">
+        <div className="wd-title p-3 ps-2 bg-secondary">
+          <BsGripVertical className="me-2 fs-3" />
+          <BsChevronDown className="me-2" />
+          ASSIGNMENTS
+          <AssignmentsControlButtons />
+        </div>
+        {assignments.map((assignment) => (
+          <ListGroup.Item className="wd-lesson p-3 ps-1">
             <AssignmentPreview {...assignment} />
-          ))}
-        </li>
-      </ul>
-    </div>
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
+    </Container>
   );
 }

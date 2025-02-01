@@ -1,10 +1,19 @@
-import { Link } from "react-router-dom";
+import NavLink, { NavLinkProps } from "./NavLink";
+
 export default function AccountNavigation() {
-  return (
-    <div id="wd-account-navigation">
-      <Link to={`/Kambaz/Account/Signin`}> Signin </Link> <br />
-      <Link to={`/Kambaz/Account/Signup`}> Signup </Link> <br />
-      <Link to={`/Kambaz/Account/Profile`}> Profile </Link> <br />
-    </div>
-  );
+  const navLinks: NavLinkProps[] = [
+    {
+      title: "Sign In",
+      path: "/Kambaz/Account/Signin",
+    },
+    {
+      title: "Sign Up",
+      path: "/Kambaz/Account/Signup",
+    },
+    {
+      title: "Profile",
+      path: "/Kambaz/Account/Profile",
+    },
+  ];
+  return <div id="wd-account-navigation">{navLinks.map(NavLink)}</div>;
 }
