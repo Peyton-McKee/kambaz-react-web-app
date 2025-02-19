@@ -3,35 +3,26 @@ import AssignmentsControls from "./AssignmentControls";
 import AssignmentPreview, { AssignmentPreviewProps } from "./AssignmentPreview";
 import { BsChevronDown, BsGripVertical } from "react-icons/bs";
 import AssignmentsControlButtons from "./AssignmentsControlButtons";
+import { useParams } from "react-router";
+import { assignments } from "../../Database";
+
+const assignmentTransformer = (
+  assignment: (typeof assignments)[0]
+): AssignmentPreviewProps => ({
+  title: assignment.title,
+  courseId: assignment.course,
+  assignmentId: assignment._id,
+  dueDate: new Date(assignment.dueDate),
+  dateAvailable: new Date(assignment.dateAvailable),
+  numPoints: assignment.numPoints,
+});
 
 export default function Assignments() {
-  const courseId = "1234";
-  const assignments: AssignmentPreviewProps[] = [
-    {
-      courseId,
-      assignmentId: "1234",
-      title: "A1 - ENV + HTML",
-      dueDate: new Date("05/13/2025"),
-      dateAvailable: new Date("05/06/2025"),
-      numPoints: 100,
-    },
-    {
-      courseId,
-      assignmentId: "12345",
-      title: "A2 - CSS + BOOTSTRAP",
-      dueDate: new Date("05/20/2025"),
-      dateAvailable: new Date("05/13/2025"),
-      numPoints: 100,
-    },
-    {
-      courseId,
-      assignmentId: "123456",
-      title: "A3 - JAVASCRIPT + REACT",
-      dueDate: new Date("05/27/2025"),
-      dateAvailable: new Date("05/20/2025"),
-      numPoints: 100,
-    },
-  ];
+  const { cid } = useParams();
+
+  const assignmentsProps: AssignmentPreviewProps[] = assignments
+    .filter((assignment) => assignment.course === cid)
+    .map(assignmentTransformer);
 
   return (
     <Container id="wd-assignments">
@@ -44,7 +35,7 @@ export default function Assignments() {
           ASSIGNMENTS
           <AssignmentsControlButtons />
         </div>
-        {assignments.map((assignment) => (
+        {assignmentsProps.map((assignment) => (
           <ListGroup.Item className="wd-lesson p-3 ps-1">
             <AssignmentPreview {...assignment} />
           </ListGroup.Item>

@@ -15,8 +15,6 @@ export default function NavLink({
 }: NavLinkProps) {
   const { pathname } = useLocation();
 
-  console.log(pathname);
-
   return (
     <Link
       to={path}

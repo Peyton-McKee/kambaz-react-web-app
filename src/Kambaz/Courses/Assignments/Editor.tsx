@@ -8,13 +8,29 @@ import {
 } from "react-bootstrap";
 import LabeledFormInput, { LabeledFormInputProps } from "./LabeledFormInput";
 import SelectManyFormInput from "./SelectManyFormInput";
+import { Link, useParams } from "react-router";
+import { assignments } from "../../Database";
+
+const convertToDateString = (date: string) => {
+  return new Date(date).toISOString().split("T")[0];
+};
 
 export default function AssignmentEditor() {
+  const { aid, cid } = useParams();
+
+  const assignment = assignments.find((assignment) => assignment._id === aid);
+
+  if (!assignment) {
+    return <h4 className="text-danger">No Assignment found</h4>;
+  }
+
   const formInputContent: LabeledFormInputProps[] = [
     {
       label: "Points",
       id: "wd-points",
-      inputComponent: <FormControl type="number" value={100} />,
+      inputComponent: (
+        <FormControl type="number" value={assignment.numPoints} />
+      ),
     },
     {
       label: "Assignment Group",
@@ -71,7 +87,10 @@ export default function AssignmentEditor() {
             Due
           </FormLabel>
           <br />
-          <FormControl type="date" value={"05/13/2024"} />
+          <FormControl
+            type="date"
+            value={convertToDateString(assignment.dueDate)}
+          />
           <br />
 
           <div className="d-flex align-items-center">
@@ -80,30 +99,35 @@ export default function AssignmentEditor() {
                 Available from
               </FormLabel>
               <br />
-              <FormControl type="date" value={"05/13/2024"} />
+              <FormControl
+                type="date"
+                value={convertToDateString(assignment.dateAvailable)}
+              />
             </div>
             <div>
               <FormLabel className="fw-bold" htmlFor="wd-assign-to">
                 Until
               </FormLabel>
               <br />
-              <FormControl type="date" value={"05/20/2024"} />
+              <FormControl
+                type="date"
+                value={convertToDateString(assignment.dueDate)}
+              />
             </div>
           </div>
         </div>
       ),
     },
   ];
+
   return (
     <Form id="wd-assignments-editor">
       <FormGroup>
         <FormLabel>Assignment Name</FormLabel>
-        <FormControl id="wd-name" value={"A1 - ENV + HTML"}></FormControl>
+        <FormControl id="wd-name" value={assignment.title}></FormControl>
       </FormGroup>
       <br />
-      <FormControl as="textarea">
-        The assignment is available online Submit a link to the landing page of
-      </FormControl>
+      <FormControl as="textarea">{assignment.description}</FormControl>
       <br />
       <table className="w-100">
         <tbody>
@@ -118,10 +142,14 @@ export default function AssignmentEditor() {
       <br />
       <hr className="border" />
       <div className="float-end">
-        <Button className="bg-secondary me-2 border-secondary text-black">
-          Cancel
-        </Button>
-        <Button className="bg-success border-secondary">Save</Button>
+        <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+          <Button className="bg-secondary me-2 border-secondary text-black">
+            Cancel
+          </Button>
+        </Link>
+        <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+          <Button className="bg-success border-secondary">Save</Button>
+        </Link>
       </div>
     </Form>
   );

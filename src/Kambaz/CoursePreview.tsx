@@ -22,8 +22,13 @@ export default function CoursePreview({
       >
         <Card.Img variant="top" src={imgSrc} width="100%" height={160} />
         <Card.Body>
-          <Card.Title className="wd-dashboard-course-title">{title}</Card.Title>
-          <Card.Text className="wd-dashboard-course-description">
+          <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
+            {title}
+          </Card.Title>
+          <Card.Text
+            className="wd-dashboard-course-description overflow-hidden"
+            style={{ height: "100px" }}
+          >
             {description}
           </Card.Text>
           <Button variant="primary">Go</Button>
