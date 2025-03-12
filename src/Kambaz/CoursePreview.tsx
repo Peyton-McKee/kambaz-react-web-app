@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -22,7 +23,6 @@ export default function CoursePreview({
   setCourse,
   enrollmentId,
 }: CoursePreviewProps) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
