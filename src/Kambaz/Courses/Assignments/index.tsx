@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Container, ListGroup } from "react-bootstrap";
 import AssignmentsControls from "./AssignmentControls";
 import AssignmentPreview, { AssignmentPreviewProps } from "./AssignmentPreview";
@@ -5,6 +6,7 @@ import { BsChevronDown, BsGripVertical } from "react-icons/bs";
 import AssignmentsControlButtons from "./AssignmentsControlButtons";
 import { useParams } from "react-router";
 import { assignments } from "../../Database";
+import { useSelector } from "react-redux";
 
 const assignmentTransformer = (
   assignment: (typeof assignments)[0]
@@ -20,8 +22,10 @@ const assignmentTransformer = (
 export default function Assignments() {
   const { cid } = useParams();
 
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
+
   const assignmentsProps: AssignmentPreviewProps[] = assignments
-    .filter((assignment) => assignment.course === cid)
+    .filter((assignment: any) => assignment.course === cid)
     .map(assignmentTransformer);
 
   return (
