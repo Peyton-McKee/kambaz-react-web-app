@@ -13,6 +13,8 @@ import { Link, useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { addAssignment, updateAssignment } from "./reducer";
+import * as assignmentClient from "./client";
+import * as courseClient from "../client";
 
 const convertToDateString = (date: string) => {
   return new Date(date).toISOString().split("T")[0];
@@ -43,13 +45,22 @@ export default function AssignmentEditor() {
     return <h4 className="text-danger">No Assignment found</h4>;
   }
 
-  const onSave = () => {
-    if (aid === "-1") {
-      dispatch(addAssignment(assignment));
-    } else {
-      dispatch(updateAssignment(assignment));
+  const onSave = async () => {
+    if (cid) {
+      if (aid === "-1") {
+        const newAssignment = await courseClient.createAssignmnetForCourse(
+          cid,
+          assignment
+        );
+        dispatch(addAssignment(newAssignment));
+      } else {
+        const updatedAssignment = await assignmentClient.updateAssignment(
+          assignment
+        );
+        dispatch(updateAssignment(updatedAssignment));
+      }
+      navigate(`/Kambaz/Courses/${cid}/Assignments`);
     }
-    navigate(`/Kambaz/Courses/${cid}/Assignments`);
   };
 
   const formInputContent: LabeledFormInputProps[] = [

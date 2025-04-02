@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice } from "@reduxjs/toolkit";
-import { enrollments } from "./Database";
-import { v4 as uuidv4 } from "uuid";
+
 const initialState = {
-  enrollments: enrollments,
+  enrollments: [] as any[],
 };
 
 const enrollmentsSlice = createSlice({
@@ -15,15 +15,14 @@ const enrollmentsSlice = createSlice({
       );
     },
     addEnrollment: (state, { payload: enrollment }) => {
-      const newEnrollment = {
-        _id: uuidv4(),
-        user: enrollment.userId,
-        course: enrollment.courseId,
-      };
-      state.enrollments = [...state.enrollments, newEnrollment];
+      state.enrollments = [...state.enrollments, enrollment];
+    },
+    setEnrollments: (state, { payload }) => {
+      state.enrollments = payload;
     },
   },
 });
 
-export const { removeEnrollment, addEnrollment } = enrollmentsSlice.actions;
+export const { removeEnrollment, addEnrollment, setEnrollments } =
+  enrollmentsSlice.actions;
 export default enrollmentsSlice.reducer;

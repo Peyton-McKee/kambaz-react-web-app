@@ -3,15 +3,18 @@ import { Button, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { addEnrollment, removeEnrollment } from "./enrollmentsReducer";
+import { useEffect, useState } from "react";
+import * as enrollmentClient from "./enrollments.client";
+import { useRefreshCourses } from "./Courses/reducer";
 
 export interface CoursePreviewProps {
   courseId: string;
   imgSrc: string;
   title: string;
   description: string;
+  showEnrolled: boolean;
   deleteCourse: () => void;
   setCourse: () => void;
-  enrollmentId?: string;
 }
 
 export default function CoursePreview({
@@ -19,13 +22,44 @@ export default function CoursePreview({
   imgSrc,
   title,
   description,
+  showEnrolled,
   deleteCourse,
   setCourse,
-  enrollmentId,
 }: CoursePreviewProps) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const refresh = useRefreshCourses(showEnrolled);
+
+  const [enrollmentId, setEnrollmentId] = useState(undefined);
+
+  const getEnrollment = async () => {
+    const enrollment = await enrollmentClient.getEnrollmentForUserAndCourse(
+      currentUser._id,
+      courseId
+    );
+
+    setEnrollmentId(enrollment._id);
+  };
+
+  const enroll = async () => {
+    const enrollment = await enrollmentClient.enrollUserFromCourse(
+      currentUser._id,
+      courseId
+    );
+    dispatch(addEnrollment(enrollment));
+    refresh();
+  };
+
+  const unenroll = async () => {
+    await enrollmentClient.unenrollUserFromCourse(currentUser._id, courseId);
+    dispatch(removeEnrollment({ userId: currentUser._id, courseId }));
+    refresh();
+  };
+
+  useEffect(() => {
+    getEnrollment();
+  });
 
   return (
     <Card>
@@ -75,9 +109,9 @@ export default function CoursePreview({
           <Button
             onClick={() => {
               if (enrollmentId) {
-                dispatch(removeEnrollment(enrollmentId));
+                unenroll();
               } else {
-                dispatch(addEnrollment({ userId: currentUser._id, courseId }));
+                enroll();
               }
             }}
             className={`bg-${enrollmentId ? "danger" : "success"} float-end`}

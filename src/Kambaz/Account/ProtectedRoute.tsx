@@ -8,6 +8,7 @@ export default function ProtectedRoute({ children }: { children: any }) {
   const { pathname } = useLocation();
   const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
   const { cid } = useParams();
+  console.log(currentUser, enrollments, cid);
 
   if (
     !currentUser ||

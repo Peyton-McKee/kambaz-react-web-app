@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Table } from "react-bootstrap";
 import PeopleTableCell, { PeopleTableCellProps } from "./TableCell";
 import { useParams } from "react-router";
-import { users, enrollments } from "../../Database";
+import * as coursesClient from "../client";
+import { useEffect, useState } from "react";
 
-const userTransformer = (user: (typeof users)[0]): PeopleTableCellProps => ({
+const userTransformer = (user: any): PeopleTableCellProps => ({
   firstName: user.firstName,
   lastName: user.lastName,
   loginId: user.loginId,
@@ -16,14 +18,17 @@ const userTransformer = (user: (typeof users)[0]): PeopleTableCellProps => ({
 export default function PeopleTable() {
   const { cid } = useParams();
 
-  const userProps: PeopleTableCellProps[] = users
-    .filter((user) =>
-      enrollments.some(
-        (enrollment) =>
-          enrollment.user === user._id && enrollment.course === cid
-      )
-    )
-    .map(userTransformer);
+  const [userProps, setUserProps] = useState<PeopleTableCellProps[]>([]);
+
+  useEffect(() => {
+    const getPeople = async () => {
+      if (cid) {
+        const users = await coursesClient.getPeopleForCourse(cid);
+        setUserProps(users.map(userTransformer));
+      }
+    };
+    getPeople();
+  });
 
   return (
     <div id="wd-people-table">

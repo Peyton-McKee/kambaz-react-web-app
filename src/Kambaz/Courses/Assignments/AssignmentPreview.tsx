@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { deleteAssignment } from "./reducer";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import * as assignmentClient from "./client";
 
 export interface AssignmentPreviewProps {
   courseId: string;
@@ -30,7 +31,8 @@ export default function AssignmentPreview({
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
-  const onConfirmDelete = () => {
+  const onConfirmDelete = async () => {
+    await assignmentClient.deleteAssignmnet(assignmentId);
     dispatch(deleteAssignment(assignmentId));
   };
 
@@ -41,7 +43,7 @@ export default function AssignmentPreview({
         to={
           currentUser.role === "FACULTY"
             ? `/Kambaz/Courses/${courseId}/Assignments/${assignmentId}`
-            : `/Kambaz/Courses.${courseId}/Assignments`
+            : `/Kambaz/Courses/${courseId}/Assignments`
         }
       >
         <BsGripVertical className="me-2 fs-3" />

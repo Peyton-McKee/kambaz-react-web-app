@@ -3,7 +3,7 @@ import { useLocation } from "react-router";
 
 export default function TOC() {
   const { pathname } = useLocation();
-  const labs = [1, 2, 3, 4];
+  const labs = [1, 2, 3, 4, 5];
 
   return (
     <Nav variant="pills">

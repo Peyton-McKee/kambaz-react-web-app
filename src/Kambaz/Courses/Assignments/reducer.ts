@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice } from "@reduxjs/toolkit";
-import { assignments } from "../../Database";
 import { v4 as uuidv4 } from "uuid";
 const initialState = {
-  assignments: assignments,
+  assignments: [],
 };
 const assignmentsSlice = createSlice({
   name: "assignments",
@@ -31,6 +30,9 @@ const assignmentsSlice = createSlice({
         a._id === assignmentId ? { ...a, editing: true } : a
       ) as any;
     },
+    setAssignments: (state, { payload }) => {
+      state.assignments = payload;
+    },
   },
 });
 export const {
@@ -38,5 +40,6 @@ export const {
   deleteAssignment,
   updateAssignment,
   editAssignment,
+  setAssignments,
 } = assignmentsSlice.actions;
 export default assignmentsSlice.reducer;

@@ -6,18 +6,58 @@ import {
   addCourse,
   deleteCourse,
   setCourse,
+  setCourses,
   updateCourse,
 } from "./Courses/reducer";
-import { useState } from "react";
-import { findEnrollment, isUserEnrolledInCourse } from "./enrollments.utils";
+import { useEffect, useState } from "react";
+import * as userClient from "./Account/client";
+import * as courseClient from "./Courses/client";
+import { setEnrollments } from "./enrollmentsReducer";
 
 export default function Dashboard() {
   const { courses, course } = useSelector((state: any) => state.courseReducer);
-  const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
 
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [toggleEnrolled, setToggledEnrolled] = useState(true);
+
+  useEffect(() => {
+    const fetchCourses = async (enrolled: boolean) => {
+      try {
+        const courses = await userClient.findMyCourses(enrolled);
+        dispatch(setCourses(courses));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchEnrollments = async () => {
+      try {
+        const enrollments = await userClient.getEnrollments();
+        dispatch(setEnrollments(enrollments));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCourses(toggleEnrolled);
+    fetchEnrollments();
+  }, [toggleEnrolled, dispatch]);
+
+  const updateCourseRemote = async () => {
+    await courseClient.updateCourse(course);
+    dispatch(updateCourse());
+  };
+
+  const addCourseRemote = async () => {
+    const newCourse = await userClient.createCourse(course);
+    dispatch(addCourse(newCourse));
+  };
+
+  const deleteCourseRemote = async (courseId: string) => {
+    await courseClient.deleteCourse(courseId);
+    dispatch(deleteCourse(courseId));
+  };
 
   return (
     <div id="wd-dashboard">
@@ -29,13 +69,13 @@ export default function Dashboard() {
             <button
               className="btn btn-primary float-end"
               id="wd-add-new-course-click"
-              onClick={() => dispatch(addCourse())}
+              onClick={() => addCourseRemote()}
             >
               Add
             </button>
             <button
               className="btn btn-warning float-end me-2"
-              onClick={() => dispatch(updateCourse())}
+              onClick={() => updateCourseRemote()}
               id="wd-update-course-click"
             >
               Update
@@ -70,32 +110,19 @@ export default function Dashboard() {
       <hr />
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
-          {courses
-            .filter((course: any) =>
-              toggleEnrolled
-                ? isUserEnrolledInCourse(
-                    enrollments,
-                    course._id,
-                    currentUser._id
-                  )
-                : true
-            )
-            .map((course: any) => (
-              <Col className="wd-dashboard-course" style={{ width: "300px" }}>
-                <CoursePreview
-                  title={course.name}
-                  courseId={course._id}
-                  imgSrc={course.imgSrc ?? "images/NEU.png"}
-                  description={course.description}
-                  deleteCourse={() => dispatch(deleteCourse(course._id))}
-                  setCourse={() => dispatch(setCourse(course))}
-                  enrollmentId={
-                    findEnrollment(enrollments, course._id, currentUser._id)
-                      ?._id
-                  }
-                />
-              </Col>
-            ))}
+          {courses.map((course: any) => (
+            <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+              <CoursePreview
+                title={course.name}
+                courseId={course._id}
+                imgSrc={course.imgSrc ?? "images/NEU.png"}
+                description={course.description}
+                deleteCourse={() => deleteCourseRemote(course._id)}
+                setCourse={() => dispatch(setCourse(course))}
+                showEnrolled={toggleEnrolled}
+              />
+            </Col>
+          ))}
         </Row>
       </div>
     </div>

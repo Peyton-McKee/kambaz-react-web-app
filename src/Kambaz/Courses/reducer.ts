@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice } from "@reduxjs/toolkit";
-import { courses } from "../Database";
-import { v4 as uuidv4 } from "uuid";
+import * as usersClient from "../Account/client";
+import { useDispatch } from "react-redux";
+
 const initialState = {
-  courses: courses,
+  courses: [] as any[],
   course: {
     _id: "0",
     name: "New Course",
@@ -20,9 +22,8 @@ const coursesSlice = createSlice({
   name: "courses",
   initialState,
   reducers: {
-    addCourse: (state) => {
-      const newCourse = { ...state.course, _id: uuidv4() };
-      state.courses = [...courses, newCourse];
+    addCourse: (state, { payload }) => {
+      state.courses = [...state.courses, payload];
     },
     deleteCourse: (state, { payload: courseId }) => {
       state.courses = state.courses.filter((course) => course._id !== courseId);
@@ -39,9 +40,21 @@ const coursesSlice = createSlice({
     setCourse: (state, { payload: course }) => {
       state.course = course;
     },
+    setCourses: (state, { payload }) => {
+      state.courses = payload;
+    },
   },
 });
 
-export const { addCourse, deleteCourse, updateCourse, setCourse } =
+export const { addCourse, deleteCourse, updateCourse, setCourse, setCourses } =
   coursesSlice.actions;
 export default coursesSlice.reducer;
+
+export const useRefreshCourses = (showEnrolled: boolean) => {
+  const dispatch = useDispatch();
+  return () => {
+    usersClient.findMyCourses(showEnrolled).then((courses) => {
+      dispatch(setCourses(courses));
+    });
+  };
+};

@@ -5,12 +5,12 @@ import AssignmentPreview, { AssignmentPreviewProps } from "./AssignmentPreview";
 import { BsChevronDown, BsGripVertical } from "react-icons/bs";
 import AssignmentsControlButtons from "./AssignmentsControlButtons";
 import { useParams } from "react-router";
-import { assignments } from "../../Database";
-import { useSelector } from "react-redux";
+import * as coursesClient from "../client";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { setAssignments } from "./reducer";
 
-const assignmentTransformer = (
-  assignment: (typeof assignments)[0]
-): AssignmentPreviewProps => ({
+const assignmentTransformer = (assignment: any): AssignmentPreviewProps => ({
   title: assignment.title,
   courseId: assignment.course,
   assignmentId: assignment._id,
@@ -24,9 +24,21 @@ export default function Assignments() {
 
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
 
-  const assignmentsProps: AssignmentPreviewProps[] = assignments
-    .filter((assignment: any) => assignment.course === cid)
-    .map(assignmentTransformer);
+  const assignmentsProps: AssignmentPreviewProps[] = assignments.map(
+    assignmentTransformer
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      if (cid) {
+        const assignments = await coursesClient.findAssignmentsForCourse(cid);
+        dispatch(setAssignments(assignments));
+      }
+    };
+
+    fetchAssignments();
+  }, [cid, dispatch]);
 
   return (
     <Container id="wd-assignments">
