@@ -28,6 +28,14 @@ export default function TOC() {
           My GitHub
         </Nav.Link>
       </Nav.Item>
+      <Nav.Item>
+        <Nav.Link
+          id="wd-github"
+          href="https://github.com/Peyton-McKee/kambaz-node-server-app"
+        >
+          Server GitHub
+        </Nav.Link>
+      </Nav.Item>
     </Nav>
   );
 }
