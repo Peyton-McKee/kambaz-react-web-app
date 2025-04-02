@@ -28,7 +28,7 @@ export default function PeopleTable() {
       }
     };
     getPeople();
-  });
+  }, [cid]);
 
   return (
     <div id="wd-people-table">
