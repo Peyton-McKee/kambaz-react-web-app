@@ -56,4 +56,4 @@ export const getEnrollments = async () => {
     `${USERS_API}/current/enrollments`
   );
   return data;
-};
+}; 
