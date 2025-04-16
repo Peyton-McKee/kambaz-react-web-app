@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Table } from "react-bootstrap";
 import PeopleTableCell, { PeopleTableCellProps } from "./TableCell";
+import PeopleDetails from "./Details";
 import { useParams } from "react-router";
-import * as coursesClient from "../client";
 import { useEffect, useState } from "react";
+import * as coursesClient from "../client";
 
 const userTransformer = (user: any): PeopleTableCellProps => ({
+  id: user._id,
   firstName: user.firstName,
   lastName: user.lastName,
   loginId: user.loginId,
@@ -15,23 +17,24 @@ const userTransformer = (user: any): PeopleTableCellProps => ({
   totalActivity: user.totalActivity,
 });
 
-export default function PeopleTable() {
+export default function PeopleTable({ users }: { users?: any[] }) {
   const { cid } = useParams();
-
-  const [userProps, setUserProps] = useState<PeopleTableCellProps[]>([]);
+  const [retrievedUsers, setRetrievedUsers] = useState([]);
 
   useEffect(() => {
-    const getPeople = async () => {
-      if (cid) {
+    const getUsers = async () => {
+      if (cid && !users) {
         const users = await coursesClient.getPeopleForCourse(cid);
-        setUserProps(users.map(userTransformer));
+        setRetrievedUsers(users);
       }
     };
-    getPeople();
-  }, [cid]);
+
+    getUsers();
+  }, [cid, users]);
 
   return (
     <div id="wd-people-table">
+      <PeopleDetails />
       <Table striped>
         <thead>
           <tr>
@@ -43,7 +46,9 @@ export default function PeopleTable() {
             <th>Total Activity</th>
           </tr>
         </thead>
-        <tbody>{userProps.map(PeopleTableCell)}</tbody>
+        <tbody>
+          {(users ?? retrievedUsers).map(userTransformer).map(PeopleTableCell)}
+        </tbody>
       </Table>
     </div>
   );

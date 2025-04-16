@@ -2,6 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as usersClient from "../Account/client";
 import { useDispatch } from "react-redux";
+import * as coursesClient from "../Courses/client";
 
 const initialState = {
   courses: [] as any[],
@@ -50,11 +51,17 @@ export const { addCourse, deleteCourse, updateCourse, setCourse, setCourses } =
   coursesSlice.actions;
 export default coursesSlice.reducer;
 
-export const useRefreshCourses = (showEnrolled: boolean) => {
+export const useRefreshCourses = (showEnrolled: boolean, userId: string) => {
   const dispatch = useDispatch();
   return () => {
-    usersClient.findMyCourses(showEnrolled).then((courses) => {
-      dispatch(setCourses(courses));
-    });
+    if (showEnrolled) {
+      usersClient
+        .findCoursesForUser(userId)
+        .then((courses) => dispatch(setCourses(courses)));
+    } else {
+      coursesClient
+        .fetchAllCourses()
+        .then((courses) => dispatch(setCourses(courses)));
+    }
   };
 };

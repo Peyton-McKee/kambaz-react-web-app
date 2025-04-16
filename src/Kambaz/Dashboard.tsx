@@ -22,9 +22,28 @@ export default function Dashboard() {
   const [toggleEnrolled, setToggledEnrolled] = useState(true);
 
   useEffect(() => {
-    const fetchCourses = async (enrolled: boolean) => {
+    const findCoursesForUser = async () => {
       try {
-        const courses = await userClient.findMyCourses(enrolled);
+        const courses = await userClient.findCoursesForUser(currentUser._id);
+        dispatch(setCourses(courses));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchCourses = async () => {
+      try {
+        const allCourses = await courseClient.fetchAllCourses();
+        const enrolledCourses = await userClient.findCoursesForUser(
+          currentUser._id
+        );
+        const courses = allCourses.map((course: any) => {
+          if (enrolledCourses.find((c: any) => c._id === course._id)) {
+            return { ...course, enrolled: true };
+          } else {
+            return course;
+          }
+        });
         dispatch(setCourses(courses));
       } catch (error) {
         console.error(error);
@@ -32,17 +51,17 @@ export default function Dashboard() {
     };
 
     const fetchEnrollments = async () => {
-      try {
-        const enrollments = await userClient.getEnrollments();
-        dispatch(setEnrollments(enrollments));
-      } catch (error) {
-        console.error(error);
-      }
+      const enrollments = await userClient.getEnrollments();
+      dispatch(setEnrollments(enrollments));
     };
 
-    fetchCourses(toggleEnrolled);
+    if (toggleEnrolled) {
+      findCoursesForUser();
+    } else {
+      fetchCourses();
+    }
     fetchEnrollments();
-  }, [toggleEnrolled, dispatch]);
+  }, [toggleEnrolled, dispatch, currentUser._id]);
 
   const updateCourseRemote = async () => {
     await courseClient.updateCourse(course);
@@ -50,7 +69,7 @@ export default function Dashboard() {
   };
 
   const addCourseRemote = async () => {
-    const newCourse = await userClient.createCourse(course);
+    const newCourse = await courseClient.createCourse(course);
     dispatch(addCourse(newCourse));
   };
 

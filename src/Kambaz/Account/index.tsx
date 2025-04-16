@@ -4,6 +4,7 @@ import Signup from "./Signup.tsx";
 import Signin from "./Signin.tsx";
 import AccountNavigation from "./Navigation.tsx";
 import { useSelector } from "react-redux";
+import Users from "./Users.tsx";
 
 export default function Account() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,6 +30,8 @@ export default function Account() {
           <Route path="/Signin" element={<Signin />} />
           <Route path="/Profile" element={<Profile />} />
           <Route path="/Signup" element={<Signup />} />
+          <Route path="/Users" element={<Users />} />
+          <Route path="/Users/:uid" element={<Users />} />
         </Routes>
       </div>
     </div>

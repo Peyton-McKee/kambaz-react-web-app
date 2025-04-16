@@ -1,6 +1,8 @@
 import { FaUserCircle } from "react-icons/fa";
+import { Link } from "react-router";
 
 export interface PeopleTableCellProps {
+  id: string;
   firstName: string;
   lastName: string;
   loginId: string;
@@ -11,6 +13,7 @@ export interface PeopleTableCellProps {
 }
 
 export default function PeopleTableCell({
+  id,
   firstName,
   lastActivity,
   lastName,
@@ -22,9 +25,14 @@ export default function PeopleTableCell({
   return (
     <tr key={loginId}>
       <td className="wd-full-name text-nowrap">
-        <FaUserCircle className="me-2 fs-1 text-secondary" />
-        <span className="wd-first-name">{firstName}</span>
-        <span className="wd-last-name">{lastName}</span>
+        <Link
+          to={`/Kambaz/Account/Users/${id}`}
+          className="text-decoration-none"
+        >
+          <FaUserCircle className="me-2 fs-1 text-secondary" />
+          <span className="wd-first-name">{firstName}</span>
+          <span className="wd-last-name">{lastName}</span>
+        </Link>
       </td>
       <td className="wd-login-id">{loginId}</td>
       <td className="wd-section">{section}</td>

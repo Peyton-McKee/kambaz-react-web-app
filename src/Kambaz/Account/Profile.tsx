@@ -20,6 +20,7 @@ export default function Profile() {
 
   const updateProfile = async () => {
     const updatedProfile = await client.updateUser(profile);
+    console.log(updatedProfile);
     dispatch(setCurrentUser(updatedProfile));
   };
 

@@ -8,7 +8,7 @@ export interface NavLinkProps {
 export default function NavLink({ title, path }: NavLinkProps) {
   const { pathname } = useLocation();
   const isActive = pathname.includes(path);
- 
+
   return (
     <div className="d-flex align-items-center" style={{ height: "40px" }}>
       {isActive && (

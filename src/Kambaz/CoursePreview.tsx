@@ -29,7 +29,7 @@ export default function CoursePreview({
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const refresh = useRefreshCourses(showEnrolled);
+  const refresh = useRefreshCourses(showEnrolled, currentUser._id);
 
   const [enrollmentId, setEnrollmentId] = useState(undefined);
 
