@@ -8,14 +8,13 @@ import ProtectedRoute from "./Account/ProtectedRoute";
 import Session from "./Account/Session";
 
 export default function Kambaz() {
-
   return (
     <Session>
       <div id="wd-kambaz">
         <KambazNavigation />
         <div className="wd-main-content-offset p-3">
           <Routes>
-            <Route path="/" element={<Navigate to="/Kambaz/Account" />} />
+            <Route path="/" element={<Navigate to="/Kambaz/Dashboard" />} />
             <Route path="/Account/*" element={<Account />} />
             <Route
               path="/Dashboard"

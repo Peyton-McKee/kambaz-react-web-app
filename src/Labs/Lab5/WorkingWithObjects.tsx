@@ -67,7 +67,6 @@ export default function WorkingWithObjects() {
         type="checkbox"
         checked={assignment.completed}
         onChange={() => {
-          console.log(assignment.completed);
           setAssignment({
             ...assignment,
             completed: !assignment.completed,
