@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
-import QuizEditor from "./editor";
+import QuizEditor from "./Editor";
 import { Button, Container } from "react-bootstrap";
 import QuizPreview from "./QuizPreview";
 
